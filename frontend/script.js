@@ -19,7 +19,7 @@ document.getElementById("riskForm").addEventListener("submit", function (event) 
     }
 
     // Send data to backend
-    fetch("https://your-backend-api-url.com/calculate-risk", {
+    fetch("health-insurance-riskcalculator-aa-c9hhh4hpdffjf3gs.uaenorth-01.azurewebsites.net/calculate-risk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ age, height, weight, bp, diseases })
