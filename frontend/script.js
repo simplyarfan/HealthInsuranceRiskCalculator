@@ -19,7 +19,7 @@ document.getElementById("riskForm").addEventListener("submit", function(event) {
         history: history
     };
 
-    fetch("https://your-backend-url.com/calculate", {  // Use the correct backend API
+    fetch("health-insurance-riskcalculator-aa-c9hhh4hpdffjf3gs.uaenorth-01.azurewebsites.net/calculate", {  // Use the correct backend API
         method: "POST",
         headers: {
             "Content-Type": "application/json"
