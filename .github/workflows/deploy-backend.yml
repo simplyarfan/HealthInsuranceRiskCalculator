@@ -1,4 +1,5 @@
 name: Deploy Backend to Azure Web App
+
 on:
   push:
     branches:
@@ -29,7 +30,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: "health-risk-app"
+          app-name: "health-insurance-riskcalculator-aa" # Ensure this matches your Azure Web App
           package: ./backend
 
       - name: Logout from Azure
