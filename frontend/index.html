@@ -13,27 +13,29 @@
         <input type="number" id="age" required><br><br>
 
         <label for="height">Height (cm):</label>
-        <input type="number" id="height" step="1" required><br><br>
+        <input type="number" id="height" step="1" min="60" required><br><br>
 
         <label for="weight">Weight (kg):</label>
         <input type="number" id="weight" step="0.1" required><br><br>
 
-        <label for="systolic">Systolic BP:</label>
-        <input type="number" id="systolic" required><br><br>
-
-        <label for="diastolic">Diastolic BP:</label>
-        <input type="number" id="diastolic" required><br><br>
-
-        <label for="history">Family History:</label>
-        <select id="history">
-            <option value="none">None</option>
-            <option value="diabetes">Diabetes</option>
-            <option value="cancer">Cancer</option>
-            <option value="alzheimer">Alzheimer’s</option>
+        <label for="bp">Blood Pressure:</label><br>
+        <select id="bp">
+            <option value="normal">Normal (Systolic < 120 AND Diastolic < 80)</option>
+            <option value="elevated">Elevated (Systolic 120-129 AND Diastolic < 80)</option>
+            <option value="stage1">Hypertension Stage 1 (Systolic 130-139 OR Diastolic 80-89)</option>
+            <option value="stage2">Hypertension Stage 2 (Systolic 140+ OR Diastolic 90+)</option>
+            <option value="crisis">Hypertensive Crisis (Systolic 180+ AND/OR Diastolic 120+)</option>
         </select><br><br>
+
+        <label>Family History (Select one or more):</label><br>
+        <input type="checkbox" id="diabetes" value="diabetes"> Diabetes
+        <input type="checkbox" id="cancer" value="cancer"> Cancer
+        <input type="checkbox" id="alzheimer" value="alzheimer"> Alzheimer’s
+        <br><br>
 
         <button type="submit">Calculate Risk</button>
     </form>
+
     <p id="result"></p>
     <script src="script.js"></script>
 </body>
