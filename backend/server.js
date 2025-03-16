@@ -1,49 +1,35 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Allowed frontend origins - update with your actual static web app URL
-const allowedOrigins = [
-  "https://witty-field-0ad987100.6.azurestaticapps.net", // Static Web App URL
-];
+app.use(express.json());
+app.use(cors());
 
-app.use(cors({ origin: allowedOrigins, methods: ["GET"], allowedHeaders: ["Content-Type"] }));
-app.use(bodyParser.json());
+app.post("/calculate-risk", (req, res) => {
+    const { age, height, weight, systolicBP, diastolicBP, disease } = req.body;
 
-// Health Risk Calculator API
-app.get("/calculate-risk", (req, res) => {
-  const { age, bmi, systolic, diastolic, history } = req.body;
-  let score = 0;
+    if (!age || !height || !weight || !systolicBP || !diastolicBP || !disease) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
 
-  // Age Factor
-  score += age < 30 ? 0 : age < 45 ? 10 : age < 60 ? 20 : 30;
+    if (height < 60) {
+        return res.status(400).json({ error: "Height must be at least 60 cm" });
+    }
 
-  // BMI Factor
-  score += bmi < 25 ? 0 : bmi < 30 ? 30 : 75;
+    let riskCategory = "Low"; 
 
-  // Blood Pressure
-  score += systolic < 120 && diastolic < 80 ? 0 :
-           systolic < 130 && diastolic < 80 ? 15 :
-           systolic < 140 || diastolic < 90 ? 30 :
-           systolic >= 140 || diastolic >= 90 ? 75 :
-           systolic > 180 || diastolic > 120 ? 100 : 0;
+    if (age > 50 || weight > 100 || systolicBP > 140 || diastolicBP > 90) {
+        riskCategory = "Moderate";
+    }
+    if (disease !== "None") {
+        riskCategory = "High";
+    }
 
-  // Family History
-  if (["diabetes", "cancer", "alzheimer"].includes(history)) score += 10;
-
-  // Determine Risk Level
-  const riskLevel = score <= 20 ? "Low Risk" :
-                    score <= 50 ? "Moderate Risk" :
-                    score <= 75 ? "High Risk" :
-                    "Uninsurable";
-
-  res.json({ riskLevel });
+    res.json({ risk: riskCategory });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
