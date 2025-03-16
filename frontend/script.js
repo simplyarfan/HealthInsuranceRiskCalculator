@@ -9,7 +9,7 @@ document.getElementById("riskForm").addEventListener("submit", function(event) {
         history: document.getElementById("history").value
     };
 
-    fetch("http://localhost:3000/calculate-risk", {
+    fetch("https://health-insurance-riskcalculator-aa-c9hh4hpdfjf3gs.uaenorth-01.azurewebsites.net/calculate-risk", {  // Azure Web App API
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
