@@ -10,16 +10,16 @@
     <h2>Health Insurance Risk Calculator</h2>
     <form id="riskForm">
         <label for="age">Age:</label>
-        <input type="number" id="age" required><br><br>
+        <input type="number" id="age" name="age" required><br><br>
 
         <label for="height">Height (cm):</label>
-        <input type="number" id="height" step="1" min="60" required><br><br>
+        <input type="number" id="height" name="height" step="1" min="60" required><br><br>
 
         <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" step="0.1" min="0" required><br><br>
+        <input type="number" id="weight" name="weight" step="0.1" min="0" required><br><br>
 
-        <label for="bp">Blood Pressure:</label><br>
-        <select id="bp">
+        <label for="bp">Blood Pressure:</label>
+        <select id="bp" name="bp">
             <option value="normal">Normal (Systolic < 120 AND Diastolic < 80)</option>
             <option value="elevated">Elevated (Systolic 120-129 AND Diastolic < 80)</option>
             <option value="stage1">Hypertension Stage 1 (Systolic 130-139 OR Diastolic 80-89)</option>
@@ -28,15 +28,16 @@
         </select><br><br>
 
         <label>Family History (Select one or more):</label><br>
-        <input type="checkbox" id="diabetes" value="diabetes"> Diabetes
-        <input type="checkbox" id="cancer" value="cancer"> Cancer
-        <input type="checkbox" id="alzheimer" value="alzheimer"> Alzheimer’s
+        <input type="checkbox" id="diabetes" name="history" value="diabetes"> Diabetes
+        <input type="checkbox" id="cancer" name="history" value="cancer"> Cancer
+        <input type="checkbox" id="alzheimer" name="history" value="alzheimer"> Alzheimer’s
         <br><br>
 
-        <button type="submit">Calculate Risk</button>
+        <button type="submit" id="calculateRisk">Calculate Risk</button>
     </form>
 
     <p id="result"></p>
+
     <script src="script.js"></script>
 </body>
 </html>
