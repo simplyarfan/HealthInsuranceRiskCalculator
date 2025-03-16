@@ -11,11 +11,11 @@ const allowedOrigins = [
   "https://witty-field-0ad987100.6.azurestaticapps.net", // Static Web App URL
 ];
 
-app.use(cors({ origin: allowedOrigins, methods: ["POST"], allowedHeaders: ["Content-Type"] }));
+app.use(cors({ origin: allowedOrigins, methods: ["GET"], allowedHeaders: ["Content-Type"] }));
 app.use(bodyParser.json());
 
 // Health Risk Calculator API
-app.post("/calculate-risk", (req, res) => {
+app.get("/calculate-risk", (req, res) => {
   const { age, bmi, systolic, diastolic, history } = req.body;
   let score = 0;
 
@@ -45,5 +45,5 @@ app.post("/calculate-risk", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
