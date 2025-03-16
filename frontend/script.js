@@ -1,81 +1,84 @@
 document.getElementById("riskForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); // Prevent form from refreshing
 
-    // Get values from form
+    // Get user inputs
     let age = parseInt(document.getElementById("age").value);
-    let height = parseInt(document.getElementById("height").value);
-    let weight = parseFloat(document.getElementById("weight").value);
-    let bp = document.getElementById("bp").value;
+    let heightCm = parseInt(document.getElementById("height").value);
+    let weightKg = parseFloat(document.getElementById("weight").value);
+    let bloodPressure = document.getElementById("bp").value;
+    let history = [];
+    
+    // Collect selected family history conditions
+    document.querySelectorAll("input[name='history']:checked").forEach((checkbox) => {
+        history.push(checkbox.value);
+    });
 
-    // Get selected family history conditions
-    let historyElements = document.querySelectorAll('input[name="history"]:checked');
-    let historyConditions = Array.from(historyElements).map(el => el.value);
+    // Validate inputs
+    if (age <= 0 || heightCm < 60 || weightKg <= 0) {
+        document.getElementById("result").innerHTML = `<p style="color:red;">Please enter valid values. Height must be at least 60 cm.</p>`;
+        return;
+    }
 
     // Calculate BMI
-    let bmi = weight / ((height / 100) * (height / 100));
+    let heightM = heightCm / 100; // Convert height from cm to meters
+    let bmi = (weightKg / (heightM * heightM)).toFixed(1); // Keep 1 decimal place
 
-    // Risk Scoring based on Age
-    let ageScore = 0;
-    if (age >= 60) {
-        ageScore = 30;
-    } else if (age >= 45) {
-        ageScore = 20;
-    } else if (age >= 30) {
-        ageScore = 10;
+    // Categorize BMI
+    let bmiCategory = "";
+    if (bmi < 18.5) {
+        bmiCategory = "Underweight (0 points)";
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+        bmiCategory = "Normal (0 points)";
+    } else if (bmi >= 25 && bmi <= 29.9) {
+        bmiCategory = "Overweight (30 points)";
+    } else {
+        bmiCategory = "Obese (75 points)";
     }
 
-    // Risk Scoring based on BMI
-    let bmiScore = 0;
-    if (bmi >= 30) {
-        bmiScore = 75; // Obese
-    } else if (bmi >= 25) {
-        bmiScore = 30; // Overweight
-    }
+    // Assign Blood Pressure Points
+    let bpPoints = {
+        "normal": 0,
+        "elevated": 15,
+        "stage1": 30,
+        "stage2": 75,
+        "crisis": 100
+    };
+    let bpCategory = document.getElementById("bp").selectedOptions[0].text; // Get text of selected BP
+    let bpRiskPoints = bpPoints[bloodPressure];
 
-    // Risk Scoring based on Blood Pressure
-    let bpScore = 0;
-    switch (bp) {
-        case "normal":
-            bpScore = 0;
-            break;
-        case "elevated":
-            bpScore = 15;
-            break;
-        case "stage1":
-            bpScore = 30;
-            break;
-        case "stage2":
-            bpScore = 75;
-            break;
-        case "crisis":
-            bpScore = 100;
-            break;
-    }
+    // Assign Age Points
+    let agePoints = age < 30 ? 0 : age < 45 ? 10 : age < 60 ? 20 : 30;
 
-    // Risk Scoring based on Family History
-    let historyScore = 0;
-    if (historyConditions.includes("diabetes")) historyScore += 10;
-    if (historyConditions.includes("cancer")) historyScore += 10;
-    if (historyConditions.includes("alzheimer")) historyScore += 10;
+    // Assign Family History Points
+    let familyHistoryPoints = history.length * 10; // Each selected condition adds 10 points
 
-    // Total Score Calculation
-    let totalScore = ageScore + bmiScore + bpScore + historyScore;
+    // Calculate total score
+    let totalRiskScore = agePoints + bpRiskPoints + (bmiCategory.includes("Overweight") ? 30 : bmiCategory.includes("Obese") ? 75 : 0) + familyHistoryPoints;
 
-    // Determine Risk Category
+    // Determine risk category
     let riskCategory = "";
-    if (totalScore <= 20) {
+    if (totalRiskScore <= 20) {
         riskCategory = "Low Risk";
-    } else if (totalScore <= 50) {
+    } else if (totalRiskScore <= 50) {
         riskCategory = "Moderate Risk";
-    } else if (totalScore <= 75) {
+    } else if (totalRiskScore <= 75) {
         riskCategory = "High Risk";
     } else {
         riskCategory = "Uninsurable";
     }
 
-    // Display the result
+    // Display the summary and result
     document.getElementById("result").innerHTML = `
-        <p><strong>Total Score:</strong> ${totalScore}</p>
-        <p><strong>Risk Category:</strong> ${riskCategory}</p>
+        <h3>Summary of Inputs:</h3>
+        <ul>
+            <li><strong>Age:</strong> ${age} years (${agePoints} points)</li>
+            <li><strong>Height:</strong> ${heightCm} cm</li>
+            <li><strong>Weight:</strong> ${weightKg} kg</li>
+            <li><strong>BMI:</strong> ${bmi} - ${bmiCategory}</li>
+            <li><strong>Blood Pressure:</strong> ${bpCategory} (${bpRiskPoints} points)</li>
+            <li><strong>Family History:</strong> ${history.length > 0 ? history.join(", ") : "None"} (${familyHistoryPoints} points)</li>
+        </ul>
+        <h3>Total Risk Score: ${totalRiskScore}</h3>
+        <h2>Final Risk Category: <span style="color:${riskCategory === 'Uninsurable' ? 'red' : riskCategory === 'High Risk' ? 'orange' : 'green'};">${riskCategory}</span></h2>
     `;
 });
