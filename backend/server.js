@@ -6,9 +6,9 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Allowed frontend origins (adjust for deployment)
+// Allowed frontend origins - update with your actual static web app URL
 const allowedOrigins = [
-  "https://your-frontend-url.azurestaticapps.net", // Replace with actual frontend URL
+  "https://witty-field-0ad987100.6.azurestaticapps.net", // Static Web App URL
 ];
 
 app.use(cors({ origin: allowedOrigins, methods: ["POST"], allowedHeaders: ["Content-Type"] }));
