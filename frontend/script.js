@@ -1,22 +1,34 @@
 document.getElementById("riskForm").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const data = {
-        age: parseInt(document.getElementById("age").value),
-        bmi: parseFloat(document.getElementById("weight").value) / (parseFloat(document.getElementById("height").value) ** 2),
-        systolic: parseInt(document.getElementById("systolic").value),
-        diastolic: parseInt(document.getElementById("diastolic").value),
-        history: document.getElementById("history").value
+    // Fetch values from inputs
+    const age = document.getElementById("age").value;
+    let height = document.getElementById("height").value;
+    height = height / 100;  // Convert cm to meters
+    const weight = document.getElementById("weight").value;
+    const systolic = document.getElementById("systolic").value;
+    const diastolic = document.getElementById("diastolic").value;
+    const history = document.getElementById("history").value;
+
+    const requestData = {
+        age: parseInt(age),
+        height: parseFloat(height),
+        weight: parseFloat(weight),
+        systolic: parseInt(systolic),
+        diastolic: parseInt(diastolic),
+        history: history
     };
 
-    fetch("https://health-insurance-riskcalculator-aa-c9hh4hpdfjf3gs.uaenorth-01.azurewebsites.net/calculate-risk", {  // Azure Web App API
+    fetch("https://your-backend-url.com/calculate", {  // Use the correct backend API
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestData)
     })
     .then(response => response.json())
-    .then(result => {
-        document.getElementById("result").innerText = "Risk Level: " + result.riskLevel;
+    .then(data => {
+        document.getElementById("result").innerText = `Risk Category: ${data.risk}`;
     })
     .catch(error => console.error("Error:", error));
 });
