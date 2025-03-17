@@ -22,11 +22,11 @@ jobs:
         run: |
           cd api/calculateRisk
           npm install
-
+          
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
-          app-name: "health-insurance-riskcalculator-aa"
+          app-name: "health-insurance-riskcalculator-api"
           package: api/calculateRisk
 
       - name: Logout from Azure
