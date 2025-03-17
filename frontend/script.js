@@ -1,4 +1,4 @@
-document.getElementById("riskForm").addEventListener("submit", async function(event) {
+document.getElementById("riskForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
     let age = parseInt(document.getElementById("age").value);
@@ -13,13 +13,14 @@ document.getElementById("riskForm").addEventListener("submit", async function(ev
 
     // Validate inputs
     if (age <= 0 || height < 60 || weight <= 0) {
-        document.getElementById("result").innerHTML = `<p style="color:red;">Please enter valid values. Height must be at least 60 cm.</p>`;
+        document.getElementById("result").innerHTML = 
+            `<p style="color:red;">Please enter valid values. Height must be at least 60 cm.</p>`;
         return;
     }
 
     // Send data to Azure Function
     try {
-        let response = await fetch("https://health-insurance-riskcalculator-api.azurewebsites.net/api/calculateRisk", {
+        let response = await fetch("/api/calculateRisk", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -40,10 +41,16 @@ document.getElementById("riskForm").addEventListener("submit", async function(ev
                 <li><strong>Blood Pressure:</strong> ${bp}</li>
                 <li><strong>Family History:</strong> ${history.length > 0 ? history.join(", ") : "None"}</li>
             </ul>
-            <h3>Total Risk Score: ${data.riskScore}</h3>
-            <h2>Final Risk Category: <span style="color:${data.category === 'Uninsurable' ? 'red' : data.category === 'High Risk' ? 'orange' : 'green'};">${data.category}</span></h2>
+            <h3>Total Risk Score: ${data.score}</h3>
+            <h2>Final Risk Category: 
+                <span style="color:${data.riskCategory === 'Uninsurable' ? 'red' : data.riskCategory === 'High Risk' ? 'orange' : 'green'};">
+                    ${data.riskCategory}
+                </span>
+            </h2>
         `;
+
     } catch (error) {
-        document.getElementById("result").innerHTML = `<p style="color:red;">Error calculating risk. Please try again.</p>`;
+        document.getElementById("result").innerHTML = 
+            `<p style="color:red;">Error calculating risk. Please try again.</p>`;
     }
 });
