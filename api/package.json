@@ -1,0 +1,8 @@
+{
+    "name": "health-risk-api",
+    "version": "1.0.0",
+    "main": "index.js",
+    "dependencies": {
+        "@azure/functions": "^3.0.0"
+    }
+}
