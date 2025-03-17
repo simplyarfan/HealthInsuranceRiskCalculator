@@ -27,7 +27,7 @@ jobs:
         uses: Azure/functions-action@v1
         with:
           app-name: "health-insurance-riskcalculator-aa"
-          package: .api/calculateRisk
+          package: api/calculateRisk
 
       - name: Logout from Azure
         run: az logout
