@@ -1,4 +1,4 @@
-name: Deploy Backend to Azure Web App
+name: Deploy Backend to Azure Functions
 
 on:
   push:
@@ -22,16 +22,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Dependencies
-        run: |
-          cd backend
-          npm install
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
         with:
-          app-name: "health-insurance-riskcalculator-aa" # Ensure this matches your Azure Web App
-          package: ./backend
+          app-name: "health-insurance-riskcalculator-api"
+          package: "./backend/api"
 
       - name: Logout from Azure
         run: az logout
