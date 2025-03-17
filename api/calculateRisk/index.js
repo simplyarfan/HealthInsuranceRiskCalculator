@@ -5,47 +5,56 @@ module.exports = async function (context, req) {
         if (!age || !height || !weight || !bp) {
             context.res = {
                 status: 400,
-                body: "Missing required fields."
+                body: "Missing required fields",
             };
             return;
         }
 
-        // BMI Calculation
-        const bmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
-        let bmiScore = bmi < 18.5 ? 0 : bmi < 25 ? 0 : bmi < 30 ? 30 : 75;
+        // Calculate BMI
+        const bmi = weight / ((height / 100) ** 2);
+
+        // Risk Scoring Logic
+        let riskScore = 0;
 
         // Age Score
-        let ageScore = age < 30 ? 0 : age < 45 ? 10 : age < 60 ? 20 : 30;
+        if (age < 30) riskScore += 0;
+        else if (age < 45) riskScore += 10;
+        else if (age < 60) riskScore += 20;
+        else riskScore += 30;
+
+        // BMI Score
+        if (bmi >= 25 && bmi < 30) riskScore += 30;
+        else if (bmi >= 30) riskScore += 75;
 
         // Blood Pressure Score
-        let bpScore = {
-            "normal": 0,
-            "elevated": 15,
-            "stage1": 30,
-            "stage2": 75,
-            "crisis": 100
-        }[bp] || 0;
+        const bpScores = {
+            normal: 0,
+            elevated: 15,
+            stage1: 30,
+            stage2: 75,
+            crisis: 100,
+        };
+
+        riskScore += bpScores[bp] || 0;
 
         // Family History Score
-        let historyScore = (history || []).length * 10;
-
-        // Total Score Calculation
-        let riskScore = ageScore + bmiScore + bpScore + historyScore;
+        const familyHistoryScore = history?.length * 10 || 0;
+        riskScore += familyHistoryScore;
 
         // Risk Category
-        let category = riskScore <= 20 ? "Low Risk" :
-                       riskScore <= 50 ? "Moderate Risk" :
-                       riskScore <= 75 ? "High Risk" :
-                       "Uninsurable";
+        let category = "Low Risk";
+        if (riskScore > 75) category = "Uninsurable";
+        else if (riskScore > 50) category = "High Risk";
+        else if (riskScore > 20) category = "Moderate Risk";
 
         context.res = {
             status: 200,
-            body: { age, height, weight, bmi, riskScore, category }
+            body: { age, height, weight, bmi, bp, history, riskScore, category },
         };
     } catch (error) {
         context.res = {
             status: 500,
-            body: `Error: ${error.message}`
+            body: "Internal Server Error",
         };
     }
 };
