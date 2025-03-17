@@ -1,9 +1,12 @@
 {
-  "name": "calculate-risk",
+  "name": "calculateRisk",
   "version": "1.0.0",
-  "description": "Azure Function to calculate health risk",
+  "description": "Azure Function for Health Risk Calculation",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "@azure/functions": "^1.0.0"
+    "express": "^4.17.1"
   }
 }
