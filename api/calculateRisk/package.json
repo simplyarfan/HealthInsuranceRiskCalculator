@@ -1,0 +1,9 @@
+{
+  "name": "calculate-risk",
+  "version": "1.0.0",
+  "description": "Azure Function to calculate health risk",
+  "main": "index.js",
+  "dependencies": {
+    "@azure/functions": "^1.0.0"
+  }
+}
