@@ -1,77 +1,51 @@
 module.exports = async function (context, req) {
-    context.log("Processing request for health risk calculation.");
-
     try {
         const { age, height, weight, bp, history } = req.body;
 
-        // Ensure required fields are provided
-        if (!age || !height || !weight || !bp || !history) {
+        if (!age || !height || !weight || !bp) {
             context.res = {
                 status: 400,
-                body: { error: "Missing required fields" }
+                body: "Missing required fields."
             };
             return;
         }
 
-        // Convert height from cm to meters for BMI calculation
-        const heightInMeters = height / 100;
-        const bmi = weight / (heightInMeters * heightInMeters);
+        // BMI Calculation
+        const bmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
+        let bmiScore = bmi < 18.5 ? 0 : bmi < 25 ? 0 : bmi < 30 ? 30 : 75;
 
-        // Calculate risk score based on provided inputs
-        let riskScore = 0;
+        // Age Score
+        let ageScore = age < 30 ? 0 : age < 45 ? 10 : age < 60 ? 20 : 30;
 
-        // Age-based risk
-        if (age < 30) riskScore += 0;
-        else if (age < 45) riskScore += 10;
-        else if (age < 60) riskScore += 20;
-        else riskScore += 30;
+        // Blood Pressure Score
+        let bpScore = {
+            "normal": 0,
+            "elevated": 15,
+            "stage1": 30,
+            "stage2": 75,
+            "crisis": 100
+        }[bp] || 0;
 
-        // BMI-based risk
-        if (bmi >= 30) riskScore += 75;
-        else if (bmi >= 25) riskScore += 30;
-        else riskScore += 0;
+        // Family History Score
+        let historyScore = (history || []).length * 10;
 
-        // Blood pressure risk
-        const bpRisk = {
-            normal: 0,
-            elevated: 15,
-            stage1: 30,
-            stage2: 75,
-            crisis: 100
-        };
-        riskScore += bpRisk[bp] || 0;
+        // Total Score Calculation
+        let riskScore = ageScore + bmiScore + bpScore + historyScore;
 
-        // Family history risk
-        const historyRisk = {
-            diabetes: 10,
-            cancer: 10,
-            alzheimer: 10
-        };
-        history.forEach(disease => {
-            if (historyRisk[disease]) {
-                riskScore += historyRisk[disease];
-            }
-        });
+        // Risk Category
+        let category = riskScore <= 20 ? "Low Risk" :
+                       riskScore <= 50 ? "Moderate Risk" :
+                       riskScore <= 75 ? "High Risk" :
+                       "Uninsurable";
 
-        // Determine risk category
-        let riskCategory = "Uninsurable";
-        if (riskScore <= 20) riskCategory = "Low Risk";
-        else if (riskScore <= 50) riskCategory = "Moderate Risk";
-        else if (riskScore <= 75) riskCategory = "High Risk";
-
-        // Respond with risk assessment
         context.res = {
             status: 200,
-            body: {
-                bmi: bmi.toFixed(2),
-                riskScore,
-                riskCategory
-            }
+            body: { age, height, weight, bmi, riskScore, category }
         };
     } catch (error) {
         context.res = {
             status: 500,
-            body: { error: "Internal Server Error" }
+            body: `Error: ${error.message}`
         };
     }
 };
