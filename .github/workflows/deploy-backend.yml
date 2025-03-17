@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd backend/api/calculateRisk
+          cd api/calculateRisk
           npm install
 
       - name: Deploy to Azure Functions
