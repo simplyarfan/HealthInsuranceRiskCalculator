@@ -50,6 +50,7 @@ document.getElementById("riskForm").addEventListener("submit", async function (e
             <h2>Final Risk Category: <span style="color:${data.category === "Uninsurable" ? "red" : data.category === "High Risk" ? "orange" : "green"};">${data.category}</span></h2>
         `;
     } catch (error) {
-        document.getElementById("result").innerHTML = `<p style="color:red;">Error calculating risk. Please try again.</p>`;
+    console.error("Risk calculation error:", error);
+    document.getElementById("result").innerHTML = `<p style="color:red;">Error calculating risk. Please try again.</p>`;
     }
 });
