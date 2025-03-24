@@ -4,9 +4,18 @@ document.getElementById("riskForm").addEventListener("submit", async function (e
     let age = parseInt(document.getElementById("age").value);
     let height = parseInt(document.getElementById("height").value);
     let weight = parseFloat(document.getElementById("weight").value);
-    let bp = document.getElementById("bp").value;
-    let history = [];
 
+    let bpLabel = document.getElementById("bp").value;
+    const bpMapping = {
+        "Normal (Systolic < 120 AND Diastolic < 80)": "normal",
+        "Elevated (Systolic 120-129 AND Diastolic < 80)": "elevated",
+        "High BP Stage 1 (Systolic 130-139 OR Diastolic 80-89)": "stage1",
+        "High BP Stage 2 (Systolic ≥140 OR Diastolic ≥90)": "stage2",
+        "Hypertensive Crisis (Systolic >180 AND/OR Diastolic >120)": "crisis"
+    };
+    let bp = bpMapping[bpLabel] || "normal";
+
+    let history = [];
     document.querySelectorAll("input[name='history']:checked").forEach((checkbox) => {
         history.push(checkbox.value);
     });
@@ -44,4 +53,3 @@ document.getElementById("riskForm").addEventListener("submit", async function (e
         document.getElementById("result").innerHTML = `<p style="color:red;">Error calculating risk. Please try again.</p>`;
     }
 });
-
