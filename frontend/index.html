@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div style="margin-bottom: 20px;">
+        <p>This tool helps estimate your health insurance risk category based on key factors such as age, BMI, blood pressure, and family medical history.</p>
+        <p><strong>How to Use:</strong></p>
+        <ul>
+            <li>Enter your age, height, and weight.</li>
+            <li>Select your blood pressure level from the dropdown.</li>
+            <li>Check any relevant family history options.</li>
+            <li>Click <strong>Calculate Risk</strong> to view your risk score and category.</li>
+        </ul>
+    </div>
+
     <h2>Health Insurance Risk Calculator</h2>
     <form id="riskForm">
         <label for="age">Age:</label>
@@ -20,23 +31,22 @@
 
         <label for="bp">Blood Pressure:</label>
         <select id="bp" name="bp">
-            <option value="normal">Normal (Systolic < 120 AND Diastolic < 80)</option>
-            <option value="elevated">Elevated (Systolic 120-129 AND Diastolic < 80)</option>
-            <option value="stage1">Hypertension Stage 1 (Systolic 130-139 OR Diastolic 80-89)</option>
-            <option value="stage2">Hypertension Stage 2 (Systolic 140+ OR Diastolic 90+)</option>
-            <option value="crisis">Hypertensive Crisis (Systolic 180+ AND/OR Diastolic 120+)</option>
+            <option>Normal (Systolic < 120 AND Diastolic < 80)</option>
+            <option>Elevated (Systolic 120-129 AND Diastolic < 80)</option>
+            <option>High BP Stage 1 (Systolic 130-139 OR Diastolic 80-89)</option>
+            <option>High BP Stage 2 (Systolic ≥140 OR Diastolic ≥90)</option>
+            <option>Hypertensive Crisis (Systolic >180 AND/OR Diastolic >120)</option>
         </select><br><br>
 
-        <label>Family History (Select one or more):</label><br>
-        <input type="checkbox" id="diabetes" name="history" value="diabetes"> Diabetes
-        <input type="checkbox" id="cancer" name="history" value="cancer"> Cancer
-        <input type="checkbox" id="alzheimer" name="history" value="alzheimer"> Alzheimer’s
-        <br><br>
+        <p>Family History (Select one or more):</p>
+        <input type="checkbox" name="history" value="Diabetes"> Diabetes<br>
+        <input type="checkbox" name="history" value="Cancer"> Cancer<br>
+        <input type="checkbox" name="history" value="Alzheimer’s"> Alzheimer’s<br><br>
 
-        <button type="submit" id="calculateRisk">Calculate Risk</button>
+        <button type="submit">Calculate Risk</button>
     </form>
 
-    <p id="result"></p>
+    <div id="result" style="margin-top: 20px;"></div>
 
     <script src="script.js"></script>
 </body>
